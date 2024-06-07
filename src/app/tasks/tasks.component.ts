@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { TaskService } from '../services/task/task.service';
 import { IProjectTask } from './task.model';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { initModals } from 'flowbite';
 import { FormsModule } from '@angular/forms';
@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-tasks',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, NgIf],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.css'
 })
@@ -35,6 +35,14 @@ export class TasksComponent {
     this.getTasks();
   }
 
+  canCompleted(task: IProjectTask) {
+    if (task.status == 2 || new Date(task.dueDate) < new Date()) {
+      return false
+    }   
+
+    return true
+  }
+
   getTasks()
   {
     this.taskService.getByProjectId(this.projectId).subscribe(datas => {
@@ -54,6 +62,12 @@ export class TasksComponent {
 
   deleteTask(task: IProjectTask){
     this.taskService.delete(task).subscribe(data => {
+      this.getTasks()
+    })
+  }
+
+  completeTask(task: IProjectTask){
+    this.taskService.complete(task).subscribe(data => {
       this.getTasks()
     })
   }
