@@ -7,3 +7,13 @@ export interface IProjectTask {
     dueDate: Date,
     priority: number
 }
+
+export interface ITaskFilter {
+    statuses: number[],
+    priorities: number[]
+}
+
+export interface ISorter {
+    field: string | null,
+    direction: string
+}

@@ -5,7 +5,7 @@ import { TasksComponent } from './tasks/tasks.component';
 import { authGuard } from './auth.guard';
 
 export const routes: Routes = [
-    {path: 'login', component: LoginComponent, title: 'Login'},
+    {path: 'login', component: LoginComponent, title: 'Login', canActivate: [authGuard]},
     {path: 'projects', component: ProjectsComponent, title: 'Projects', canActivate: [authGuard]},
     {path: 'projects/:id', component: TasksComponent, title: 'Tasks', canActivate: [authGuard]},
     {path: '**', redirectTo: 'login'},

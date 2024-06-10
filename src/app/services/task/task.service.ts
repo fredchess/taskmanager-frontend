@@ -10,8 +10,10 @@ export class TaskService {
 
   constructor(private http: HttpClient) { }
 
-  getByProjectId(projectId: number) : Observable<IProjectTask[]> {
-    return this.http.get<IProjectTask[]>("/api/projects/" + projectId + "/tasks");
+  getByProjectId(projectId: number, params: any = {}) : Observable<IProjectTask[]> {
+    return this.http.get<IProjectTask[]>("/api/projects/" + projectId + "/tasks", {
+      params: params
+    });
   }
 
   add(task: IProjectTask) : Observable<IProjectTask> {

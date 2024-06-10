@@ -17,19 +17,15 @@ export class LoginComponent {
 
   }
 
-  ngOnInit() {
-    this.loginsvc.getIsAuthenticated().subscribe(
-      (data) => {
-        console.log('data des data')
-        this.router.navigate(['projects'])
-      }
-    )
-  }
-
   login() {
     this.loginsvc.login(this.email, this.password).subscribe(
-      (data) => {
-        this.router.navigate(['projects'])
+      {
+        next: (data) => {
+          this.router.navigate(['projects'])
+        },
+        error: (err) => {
+          console.log(err)
+        }
       }
     )
   }
