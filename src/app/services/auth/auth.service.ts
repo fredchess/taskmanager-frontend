@@ -1,19 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IUser } from '../../login/user.model';
+import { IUser } from '../../auth/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class LoginService {
+export class AuthService {
   private isAuthenticated : boolean = false
 
   constructor(private http: HttpClient) { }
 
   login(email: string, password: string) : Observable<any> {
-    console.log("login")
-    return this.http.post("http://localhost:5237/api/auth/login?useCookies=true", 
+    return this.http.post("/api/auth/login?useCookies=true", 
       {
         email: email,
         password: password
@@ -24,6 +23,21 @@ export class LoginService {
           'Accept': 'application/json'
         },
         withCredentials: true
+      }
+    )
+  }
+
+  register(email: string, password: string) {
+    return this.http.post("/api/auth/register", 
+      {
+        email: email,
+        password: password
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
       }
     )
   }
