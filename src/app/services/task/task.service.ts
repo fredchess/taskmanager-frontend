@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IProjectTask } from '../../tasks/task.model';
 import { Observable } from 'rxjs';
+import { IPaginated } from '../../pagination/paginated.model';
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +11,8 @@ export class TaskService {
 
   constructor(private http: HttpClient) { }
 
-  getByProjectId(projectId: number, params: any = {}) : Observable<IProjectTask[]> {
-    return this.http.get<IProjectTask[]>("/api/projects/" + projectId + "/tasks", {
+  getByProjectId(projectId: number, params: any = {}) : Observable<IPaginated<IProjectTask>> {
+    return this.http.get<IPaginated<IProjectTask>>("/api/projects/" + projectId + "/tasks", {
       params: params
     });
   }

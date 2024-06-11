@@ -6,11 +6,13 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Modal, initModals } from 'flowbite';
 import { FormsModule } from '@angular/forms';
 import { TaskModalComponent } from './task-modal/task-modal.component';
+import { PaginationComponent } from '../pagination/pagination.component';
+import { ISimplePaginated } from '../pagination/paginated.model';
 
 @Component({
   selector: 'app-tasks',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, NgIf, TaskModalComponent],
+  imports: [CommonModule, RouterLink, FormsModule, NgIf, TaskModalComponent, PaginationComponent],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.css'
 })
@@ -24,6 +26,7 @@ export class TasksComponent {
   selectedPriority: number | undefined;
   sorter: ISorter
   modal!: Modal
+  pagination!: ISimplePaginated
 
   constructor(private taskService : TaskService, private route: ActivatedRoute) {
     this.projectId = Number(this.route.snapshot.paramMap.get('id'));
@@ -45,6 +48,12 @@ export class TasksComponent {
       description: "",
       dueDate: new Date(),
       priority: 0
+    }
+
+    this.pagination = {
+      page: 1,
+      limit: 2,
+      totaldata: 0
     }
 
     this.sorter = {field: null, direction: 'asc'}
@@ -87,9 +96,17 @@ export class TasksComponent {
       statuses: this.selectedStatuses,
       priorities: this.selectedPriority == undefined ? [] : [this.selectedPriority],
       sortby: this.sorter.field,
-      sortorder: this.sorter.direction
+      sortorder: this.sorter.direction,
+      limit: this.pagination.limit,
+      page: this.pagination.page
     }).subscribe(datas => {
-      this.tasks = datas
+      this.tasks = datas.datas
+
+      this.pagination = {
+        page: datas.page,
+        limit: datas.limit,
+        totaldata: datas.totalData
+      }
     })
   }
 
