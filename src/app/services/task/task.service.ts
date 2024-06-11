@@ -45,4 +45,14 @@ export class TaskService {
       withCredentials: true
     })
   }
+
+  update(task: IProjectTask) : Observable<any> {
+    return this.http.put("/api/tasks/" + task.id + "/", task, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      withCredentials: true
+    })
+  }
 }

@@ -18,6 +18,7 @@ export const authGuard: CanActivateFn = (route, state) => {
       if (route.routeConfig?.path === 'login' || route.routeConfig?.path === 'register') {
         return of(true);
       }
+
       return of(router.createUrlTree(['/login']));
     })
   );

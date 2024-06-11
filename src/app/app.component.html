@@ -1,3 +1,4 @@
 <div class="max-w-7xl mx-auto">
+    <a *ngIf="isAuthenticated" (click)="logout()" class="absolute top-5 right-5 cursor-pointer underline">Deconnecter</a>
     <router-outlet></router-outlet>
 </div>

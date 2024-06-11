@@ -1,13 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, map } from 'rxjs';
 import { IUser } from '../../auth/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private isAuthenticated : boolean = false
+  private isAuthenticated : BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true)
 
   constructor(private http: HttpClient) { }
 
@@ -42,11 +42,12 @@ export class AuthService {
     )
   }
 
-  getIsAuthenticated() : Observable<IUser> {
-    return this.http.get<IUser>('/api/auth/manage/info', {withCredentials: true})
+  logout() {
+    // delete cookies
+    return this.http.post("/api/auth/logout", {});
   }
 
-  setIsAuthenticated(value: boolean) {
-    this.isAuthenticated = value;
+  getIsAuthenticated() : Observable<IUser> {
+    return this.http.get<IUser>('/api/auth/manage/info', {withCredentials: true})
   }
 }

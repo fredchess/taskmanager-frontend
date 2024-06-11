@@ -3,13 +3,14 @@ import { TaskService } from '../services/task/task.service';
 import { IProjectTask, ISorter } from './task.model';
 import { CommonModule, NgIf } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { initModals } from 'flowbite';
+import { Modal, initModals } from 'flowbite';
 import { FormsModule } from '@angular/forms';
+import { TaskModalComponent } from './task-modal/task-modal.component';
 
 @Component({
   selector: 'app-tasks',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, NgIf],
+  imports: [CommonModule, RouterLink, FormsModule, NgIf, TaskModalComponent],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.css'
 })
@@ -17,14 +18,26 @@ export class TasksComponent {
 
   tasks : IProjectTask[] = [];
   newTask : IProjectTask;
+  selectedTask : IProjectTask;
   projectId : number;
   selectedStatuses: number[] = []
   selectedPriority: number | undefined;
   sorter: ISorter
+  modal!: Modal
 
   constructor(private taskService : TaskService, private route: ActivatedRoute) {
     this.projectId = Number(this.route.snapshot.paramMap.get('id'));
     this.newTask = {
+      id: 0,
+      title: "",
+      projectId: this.projectId,
+      status: 0,
+      description: "",
+      dueDate: new Date(),
+      priority: 0
+    }
+
+    this.selectedTask = {
       id: 0,
       title: "",
       projectId: this.projectId,
@@ -39,6 +52,12 @@ export class TasksComponent {
 
   ngOnInit() {
     this.getTasks();
+
+    this.modal = new Modal(document.getElementById("task-modal"))
+  }
+
+  closeModal() {
+    this.modal.hide()
   }
 
   getStatus(status: number) : string {
@@ -71,22 +90,12 @@ export class TasksComponent {
       sortorder: this.sorter.direction
     }).subscribe(datas => {
       this.tasks = datas
-
-      initModals()
     })
   }
 
   addTask(task: IProjectTask){
-    this.taskService.add(task).subscribe({
-      next: data => {
-        this.tasks.push(data)
-  
-        document.getElementById("closeModal")?.click()
-      },
-      error: err => {
-        console.log(err)
-      }
-    })
+    this.tasks.push(task)
+    this.modal.hide()
   }
 
   deleteTask(task: IProjectTask){
@@ -95,10 +104,29 @@ export class TasksComponent {
     })
   }
 
+  changeTask(task: IProjectTask) {
+    this.selectedTask = task
+    this.modal.show()
+  }
+
   completeTask(task: IProjectTask){
     this.taskService.complete(task).subscribe(data => {
-      this.getTasks()
+      this.tasks.map(t => {
+        if (t.id == task.id) {
+          t.status = 2
+        }
+      })
+      // this.getTasks()
     })
+  }
+
+  updateTask(task: IProjectTask) {
+    this.tasks.map(t => {
+      if (t.id == task.id) {
+        t = task
+      }
+    })
+    this.modal.hide()
   }
 
   toggleStatus(status: number) {
