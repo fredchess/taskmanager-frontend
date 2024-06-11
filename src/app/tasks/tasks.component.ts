@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { TaskService } from '../services/task/task.service';
 import { IProjectTask, ISorter } from './task.model';
 import { CommonModule, NgIf } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Modal, initModals } from 'flowbite';
 import { FormsModule } from '@angular/forms';
 import { TaskModalComponent } from './task-modal/task-modal.component';
@@ -28,7 +28,7 @@ export class TasksComponent {
   modal!: Modal
   pagination!: ISimplePaginated
 
-  constructor(private taskService : TaskService, private route: ActivatedRoute) {
+  constructor(private taskService : TaskService, private route: ActivatedRoute, private router: Router) {
     this.projectId = Number(this.route.snapshot.paramMap.get('id'));
     this.newTask = {
       id: 0,
@@ -167,6 +167,14 @@ export class TasksComponent {
       this.sorter.direction = 'asc'
     }
 
+    this.getTasks();
+  }
+
+  paginate(p: ISimplePaginated) {
+    this.pagination.limit = p.limit;
+    this.pagination.page = p.page
+
+    this.router.navigate([], {queryParams: {page: this.pagination.page, limit: this.pagination.limit}})
     this.getTasks();
   }
 }
