@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IPaginated, ISimplePaginated } from './paginated.model';
 import { NgFor } from '@angular/common';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-pagination',
   standalone: true,
-  imports: [NgFor],
+  imports: [NgFor, RouterModule],
   templateUrl: './pagination.component.html',
   styleUrl: './pagination.component.css'
 })
@@ -14,6 +15,13 @@ export class PaginationComponent {
   @Output() get: EventEmitter<ISimplePaginated> = new EventEmitter();
   availableLimits: number[] = [10, 25, 50, 100];
   pagination!: ISimplePaginated;
+
+  constructor(
+    private router: Router
+  )
+  {
+
+  }
 
 
   ngOnInit() {
@@ -33,8 +41,6 @@ export class PaginationComponent {
   }
 
   changePage(page: number) {
-    this.pagination.page = page;
-
-    this.get.emit(this.pagination);
+    this.router.navigate([], {queryParams: {page: page, limit: this.pagination.limit}});
   }
 }

@@ -51,8 +51,8 @@ export class TasksComponent {
     }
 
     this.pagination = {
-      page: 1,
-      limit: 2,
+      page: route.snapshot.queryParams['page'] ? Number(route.snapshot.queryParams['page']) : 1,
+      limit: route.snapshot.queryParams['limit'] <= 50 ? route.snapshot.queryParams['limit'] : 10,
       totaldata: 0
     }
 
