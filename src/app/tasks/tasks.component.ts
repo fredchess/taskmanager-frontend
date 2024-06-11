@@ -20,7 +20,7 @@ export class TasksComponent {
   projectId : number;
   selectedStatuses: number[] = []
   selectedPriority: number | undefined;
-  @Input() sorter: ISorter
+  sorter: ISorter
 
   constructor(private taskService : TaskService, private route: ActivatedRoute) {
     this.projectId = Number(this.route.snapshot.paramMap.get('id'));

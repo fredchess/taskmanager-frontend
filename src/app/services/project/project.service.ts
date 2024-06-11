@@ -10,9 +10,15 @@ export class ProjectService {
 
   constructor(private http: HttpClient) { }
 
-  add() {}
+  add(project: IProject) : Observable<IProject> {
+    return this.http.post<IProject>("/api/projects", project)
+  }
 
   get() : Observable<IProject[]> {
     return this.http.get<IProject[]>("/api/projects")
+  }
+
+  delete(project: IProject) {
+    return this.http.delete("/api/projects/" + project.id)
   }
 }
