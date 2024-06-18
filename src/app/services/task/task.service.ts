@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { IProjectTask } from '../../tasks/task.model';
 import { Observable } from 'rxjs';
 import { IPaginated } from '../../pagination/paginated.model';
+import { IBaseResponse } from '../../app.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,17 +12,21 @@ export class TaskService {
 
   constructor(private http: HttpClient) { }
 
-  getByProjectId(projectId: number, params: any = {}) : Observable<IPaginated<IProjectTask>> {
-    return this.http.get<IPaginated<IProjectTask>>("/api/projects/" + projectId + "/tasks", {
-      params: params
+  getByProjectId(projectId: string, params: any = {}) : Observable<IBaseResponse<IPaginated<IProjectTask>>> {
+    return this.http.get<IBaseResponse<IPaginated<IProjectTask>>>("/api/projects/" + projectId + "/tasks", {
+      params: params,
+      headers: {
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      }
     });
   }
 
-  add(task: IProjectTask) : Observable<IProjectTask> {
-    return this.http.post<IProjectTask>("/api/tasks/", task, {
+  add(task: IProjectTask) : Observable<IBaseResponse<IProjectTask>> {
+    return this.http.post<IBaseResponse<IProjectTask>>("/api/tasks/", task, {
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        'Accept': 'application/json',
+        "Authorization": "Bearer " + localStorage.getItem("token")
       },
       withCredentials: true
     })
@@ -31,17 +36,22 @@ export class TaskService {
     return this.http.delete<IProjectTask>("/api/tasks/" + task.id + "/", {
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        'Accept': 'application/json',
+        "Authorization": "Bearer " + localStorage.getItem("token")
       },
       withCredentials: true
     })
   }
 
   complete(task: IProjectTask) : Observable<IProjectTask> {
-    return this.http.put<IProjectTask>("/api/tasks/" + task.id + "/complete", null, {
+    return this.http.put<IProjectTask>("/api/tasks/" + task.id, {
+      ...task,
+      status: 2
+    }, {
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        'Accept': 'application/json',
+        "Authorization": "Bearer " + localStorage.getItem("token")
       },
       withCredentials: true
     })
@@ -51,7 +61,8 @@ export class TaskService {
     return this.http.put("/api/tasks/" + task.id + "/", task, {
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        'Accept': 'application/json',
+        "Authorization": "Bearer " + localStorage.getItem("token")
       },
       withCredentials: true
     })

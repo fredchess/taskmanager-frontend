@@ -24,8 +24,9 @@ export class RegisterComponent {
 
   register() {
     this.authService.register(this.email, this.password).subscribe({
-      next: () => {
-        this.router.navigate(['/login'])
+      next: (data) => {
+        localStorage.setItem("token", data)
+        this.router.navigate(['/projects'])
       },
       error: err => {
         console.log('error register')

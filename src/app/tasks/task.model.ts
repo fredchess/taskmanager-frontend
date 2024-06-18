@@ -1,11 +1,15 @@
 export interface IProjectTask {
-    id: number,
+    id: string,
     title: string,
-    projectId: number,
+    projectId: string,
     status: number,
     description: string,
     dueDate: Date,
     priority: number
+}
+
+export interface IProjectTaskResponse {
+    data: IProjectTask[]
 }
 
 export interface ITaskFilter {

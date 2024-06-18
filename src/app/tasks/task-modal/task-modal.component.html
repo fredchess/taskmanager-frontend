@@ -13,7 +13,7 @@
         class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600"
       >
         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-            {{ task.id ? 'Update project' : 'Create New Product' }}
+            {{ task.id ? 'Update Task' : 'Create New Task' }}
         </h3>
         <button
           (click)="close()"
@@ -137,7 +137,7 @@
               clip-rule="evenodd"
             ></path>
           </svg>
-          {{ task.id ? 'Update project' : 'Add project' }}
+          {{ task.id ? 'Update Task' : 'Add Task' }}
         </button>
       </form>
     </div>

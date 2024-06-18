@@ -32,7 +32,7 @@ export class ProjectsComponent {
   getProjects() 
   {
     this.projectService.get().subscribe(datas => {
-      this.projects = datas
+      this.projects = datas.data
 
       initModals()
     });
@@ -41,7 +41,7 @@ export class ProjectsComponent {
   addProject() {
     this.projectService.add(this.newProject).subscribe({
       next: project => {
-        this.projects.push(project)
+        this.projects.push(project.data)
         document.getElementById("close-modal")?.click()
       },
       error: err => {

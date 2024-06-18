@@ -22,9 +22,9 @@ export class TaskModalComponent {
   ) 
   {
     this.task = {
-      id: 0,
+      id: "",
       title: "",
-      projectId: 0,
+      projectId: "",
       status: 0,
       description: "",
       dueDate: new Date(),
@@ -39,7 +39,7 @@ export class TaskModalComponent {
   addTask() {
     this.taskService.add(this.task).subscribe({
       next: task => {
-        this.taskAdded.emit(task)
+        this.taskAdded.emit(task.data)
       },
       error: err => {
         console.log(err)

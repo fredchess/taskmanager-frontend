@@ -21,7 +21,7 @@ export class TasksComponent {
   tasks : IProjectTask[] = [];
   newTask : IProjectTask;
   selectedTask : IProjectTask;
-  projectId : number;
+  projectId : string;
   selectedStatuses: number[] = []
   selectedPriority: number | undefined;
   sorter: ISorter
@@ -29,9 +29,9 @@ export class TasksComponent {
   pagination!: ISimplePaginated
 
   constructor(private taskService : TaskService, private route: ActivatedRoute, private router: Router) {
-    this.projectId = Number(this.route.snapshot.paramMap.get('id'));
+    this.projectId = this.route.snapshot.paramMap.get('id') ?? "";
     this.newTask = {
-      id: 0,
+      id: "",
       title: "",
       projectId: this.projectId,
       status: 0,
@@ -41,7 +41,7 @@ export class TasksComponent {
     }
 
     this.selectedTask = {
-      id: 0,
+      id: "",
       title: "",
       projectId: this.projectId,
       status: 0,
@@ -100,12 +100,12 @@ export class TasksComponent {
       limit: this.pagination.limit,
       page: this.pagination.page
     }).subscribe(datas => {
-      this.tasks = datas.datas
+      this.tasks = datas.data.datas
 
       this.pagination = {
-        page: datas.page,
-        limit: datas.limit,
-        totaldata: datas.totalData
+        page: datas.data.page,
+        limit: datas.data.limit,
+        totaldata: datas.data.totalData
       }
     })
   }

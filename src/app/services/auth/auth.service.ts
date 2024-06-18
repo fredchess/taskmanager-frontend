@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, map } from 'rxjs';
+import { BehaviorSubject, Observable, map, of } from 'rxjs';
 import { IUser } from '../../auth/user.model';
 
 @Injectable({
@@ -27,8 +27,8 @@ export class AuthService {
     )
   }
 
-  register(email: string, password: string) {
-    return this.http.post("/api/auth/register", 
+  register(email: string, password: string) : Observable<string> {
+    return this.http.post<string>("/api/auth/register", 
       {
         email: email,
         password: password
@@ -42,12 +42,19 @@ export class AuthService {
     )
   }
 
-  logout() {
+  logout() : Observable<boolean> {
     // delete cookies
-    return this.http.post("/api/auth/logout", {});
+    localStorage.removeItem('token')
+
+    return of(true)
   }
 
   getIsAuthenticated() : Observable<IUser> {
-    return this.http.get<IUser>('/api/auth/manage/info', {withCredentials: true})
+    return this.http.get<IUser>('/api/auth/manage/info', {
+      withCredentials: true,
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      }
+    })
   }
 }

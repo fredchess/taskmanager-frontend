@@ -21,6 +21,7 @@ export class LoginComponent {
     this.authService.login(this.email, this.password).subscribe(
       {
         next: (data) => {
+          localStorage.setItem("token", data)
           this.router.navigate(['projects'])
         },
         error: (err) => {

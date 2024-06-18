@@ -5,3 +5,8 @@ export interface IProject
     description?: string,
     totalTasks?: number
 }
+
+export interface IProjectResponse
+{
+    data: IProject[]
+}
